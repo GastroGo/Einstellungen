@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        int language = adapterView.getSelectedItemPosition(); // 0 = Deutsch, 1 = Englisch
+        int language = adapterView.getSelectedItemPosition(); // 0 = Deutsch, 1 = Englisch,
     }
 
     @Override
