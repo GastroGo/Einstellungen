@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GastroGo-Einstellungen-V1</string>
+    <string-array name="languages">
+        <item>Deutsch</item>
+        <item>Englisch</item>"
+    </string-array>
+</resources>
