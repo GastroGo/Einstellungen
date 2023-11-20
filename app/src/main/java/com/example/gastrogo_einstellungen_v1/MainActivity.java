@@ -1,5 +1,7 @@
 package com.example.gastrogo_einstellungen_v1;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +27,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Switch benachrichtigungen;
         Switch darkmode;
         Button mitarbeiterLogin;
+        Button zurueck;
 
         benachrichtigungen = findViewById(R.id.benachrichtigungen);
         darkmode = findViewById(R.id.darkmode);
         schluesselEingabe = findViewById(R.id.schluesselEingabe);
         mitarbeiterLogin = findViewById(R.id.mitarbeiterLogin);
+        zurueck = findViewById(R.id.zurueck);
 
         mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +44,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 } else {
                     Toast.makeText(MainActivity.this, "Login fehlgeschlagen", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        zurueck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), OutputActivity.class);
+                startActivity(intent);
             }
         });
 
