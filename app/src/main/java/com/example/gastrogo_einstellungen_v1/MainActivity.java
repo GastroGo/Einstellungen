@@ -1,7 +1,9 @@
 package com.example.gastrogo_einstellungen_v1;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mitarbeiterLogin = findViewById(R.id.mitarbeiterLogin);
         zurueck = findViewById(R.id.zurueck);
 
+        
+
         mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,15 +71,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+
+
         benachrichtigungen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (benachrichtigungen.isChecked()) {
                     Model model = Model.getInstance();
                     model.setBenachrichtigungen(1);
+                    model.save(buttonView.getContext());
                 } else {
                     Model model = Model.getInstance();
                     model.setBenachrichtigungen(0);
+                    model.save(buttonView.getContext());
                 }
             }
         });
@@ -91,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Model model = Model.getInstance();
         model.setLanguage(adapterView.getSelectedItemPosition());
+        model.save(this);
     }
 
     @Override

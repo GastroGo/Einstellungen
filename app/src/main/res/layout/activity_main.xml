@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="59dp"
         android:fontFamily="sans-serif"
         android:text="Einstellungen"
         android:textAlignment="center"
@@ -19,21 +20,21 @@
         android:textStyle="bold" />
 
     <Switch
-        android:id="@+id/benachrichtigungen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="75dp"
-        android:text="Benachrichtigungen"
-        android:trackTint="#FF9800" />
-
-    <Switch
         android:id="@+id/darkmode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="169dp"
         android:text="Darkmode"
+        android:trackTint="#FF9800" />
+
+    <Switch
+        android:id="@+id/benachrichtigungen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="134dp"
+        android:text="Benachrichtigungen"
         android:trackTint="#FF9800" />
 
     <Spinner
@@ -41,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="145dp"
+        android:layout_marginTop="204dp"
         android:spinnerMode="dropdown" />
 
     <EditText
@@ -65,9 +66,10 @@
 
     <Button
         android:id="@+id/zurueck"
-        style="@style/Widget.AppCompat.Button.Small"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FF9800"
         android:text="Zurueck" />
 
 </RelativeLayout>
