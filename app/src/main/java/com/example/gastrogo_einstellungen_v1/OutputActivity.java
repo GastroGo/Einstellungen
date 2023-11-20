@@ -39,7 +39,7 @@ public class OutputActivity extends AppCompatActivity {
         Einstellungen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), OutputActivity.class);
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
                 startActivity(intent);
             }
         });

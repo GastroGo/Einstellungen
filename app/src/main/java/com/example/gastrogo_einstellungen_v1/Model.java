@@ -27,9 +27,9 @@ public class Model {
     public void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(String.valueOf(KEY_DARKMODE), darkmode);
-        editor.putInt(String.valueOf(KEY_BENACHRICHTIGUNGEN), benachrichtigungen);
-        editor.putInt(String.valueOf(KEY_LANGUAGE), language);
+        editor.putString(String.valueOf(KEY_DARKMODE), String.valueOf(darkmode));
+        editor.putString(String.valueOf(KEY_BENACHRICHTIGUNGEN), String.valueOf(benachrichtigungen));
+        editor.putString(String.valueOf(KEY_LANGUAGE), String.valueOf(language));
         editor.apply();
     }
 

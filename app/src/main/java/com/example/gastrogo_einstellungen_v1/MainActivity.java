@@ -58,9 +58,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         darkmode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (darkmode.isChecked()) {
-                    int darkmode = 1;
+                    Model model = Model.getInstance();
+                    model.setDarkmode(1);
                 } else {
-                    int darkmode = 0;
+                    Model model = Model.getInstance();
+                    model.setDarkmode(0);
                 }
             }
         });
@@ -69,9 +71,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (benachrichtigungen.isChecked()) {
-                    int benachrichtigungen = 1;
+                    Model model = Model.getInstance();
+                    model.setBenachrichtigungen(1);
                 } else {
-                    int benachrichtigungen = 0;
+                    Model model = Model.getInstance();
+                    model.setBenachrichtigungen(0);
                 }
             }
         });
@@ -85,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        int language = adapterView.getSelectedItemPosition(); // 0 = Deutsch, 1 = Englisch,
+        Model model = Model.getInstance();
+        model.setLanguage(adapterView.getSelectedItemPosition());
     }
 
     @Override
