@@ -31,22 +31,51 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Button mitarbeiterLogin;
         Button zurueck;
 
+        Spinner spinner_languages = findViewById(R.id.spinner_languages);
         benachrichtigungen = findViewById(R.id.benachrichtigungen);
         darkmode = findViewById(R.id.darkmode);
         schluesselEingabe = findViewById(R.id.schluesselEingabe);
         mitarbeiterLogin = findViewById(R.id.mitarbeiterLogin);
         zurueck = findViewById(R.id.zurueck);
 
-        
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinner_languages.setAdapter(adapter);
+        spinner_languages.setOnItemSelectedListener(this);
+
+        Model model = Model.getInstance();
+        if(model.getBenachrichtigungen() == 1) {
+            benachrichtigungen.setChecked(true);
+        } else {
+            benachrichtigungen.setChecked(false);
+        }
+
+        if(model.getDarkmode() == 1) {
+            darkmode.setChecked(true);
+        } else {
+            darkmode.setChecked(false);
+        }
+
+        if(model.getLanguage() == 1) {
+            spinner_languages.setSelection(1);
+        } else {
+            spinner_languages.setSelection(0);
+        }
 
         mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String schluesseleingabe = schluesselEingabe.getText().toString();
+                Model model = Model.getInstance();
+                model.setSchluessel(schluesseleingabe);
+                model.save(view.getContext());
+
                 if (schluesseleingabe.equals("1234")) {
                     Toast.makeText(MainActivity.this, "Login erfolgreich", Toast.LENGTH_LONG).show();
+                    mitarbeiterLogin.setEnabled(true); // Aktiviert den Button, wenn das Passwort korrekt ist
                 } else {
                     Toast.makeText(MainActivity.this, "Login fehlgeschlagen", Toast.LENGTH_LONG).show();
+                    mitarbeiterLogin.setEnabled(false); // Deaktiviert den Button bei falschem Passwort
                 }
             }
         });
@@ -61,45 +90,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         darkmode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (darkmode.isChecked()) {
-                    Model model = Model.getInstance();
+                Model model = Model.getInstance();
+                if (isChecked) {
                     model.setDarkmode(1);
                 } else {
-                    Model model = Model.getInstance();
                     model.setDarkmode(0);
                 }
+                model.save(buttonView.getContext());
             }
         });
+
 
 
 
         benachrichtigungen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (benachrichtigungen.isChecked()) {
-                    Model model = Model.getInstance();
+                Model model = Model.getInstance();
+                if (isChecked) {
                     model.setBenachrichtigungen(1);
-                    model.save(buttonView.getContext());
                 } else {
-                    Model model = Model.getInstance();
                     model.setBenachrichtigungen(0);
-                    model.save(buttonView.getContext());
                 }
+                model.save(buttonView.getContext());
             }
         });
 
-        Spinner spinner_languages = findViewById(R.id.spinner_languages);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner_languages.setAdapter(adapter);
-        spinner_languages.setOnItemSelectedListener(this);
+
+
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Model model = Model.getInstance();
         model.setLanguage(adapterView.getSelectedItemPosition());
-        model.save(this);
+        model.save(view.getContext());
     }
 
     @Override

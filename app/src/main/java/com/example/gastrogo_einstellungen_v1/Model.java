@@ -8,11 +8,13 @@ public class Model {
     private int darkmode;
     private int benachrichtigungen;
     private int language;
+    private String schluessel;
 
     private static final String PREF_NAME = "UserData";
     private static final int KEY_DARKMODE = 0;
     private static final int KEY_BENACHRICHTIGUNGEN = 0;
     private static final int KEY_LANGUAGE = 0;
+    private static final String KEY_SCHLUESSEL = null;
 
     private Model() {
     }
@@ -27,17 +29,20 @@ public class Model {
     public void save(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(String.valueOf(KEY_DARKMODE), String.valueOf(darkmode));
-        editor.putString(String.valueOf(KEY_BENACHRICHTIGUNGEN), String.valueOf(benachrichtigungen));
-        editor.putString(String.valueOf(KEY_LANGUAGE), String.valueOf(language));
+        editor.putInt("KEY_DARKMODE", darkmode); // Use "KEY_DARKMODE" instead of String.valueOf(KEY_DARKMODE)
+        editor.putInt("KEY_BENACHRICHTIGUNGEN", benachrichtigungen); // Similarly update other keys if needed
+        editor.putInt("KEY_LANGUAGE", language);
+        editor.putString("KEY_SCHLUESSEL", schluessel);
         editor.apply();
     }
+
 
     public void load(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         darkmode = sharedPref.getInt(String.valueOf(KEY_DARKMODE), 0);
         benachrichtigungen = sharedPref.getInt(String.valueOf(KEY_BENACHRICHTIGUNGEN), 0);
         language = sharedPref.getInt(String.valueOf(KEY_LANGUAGE), 0);
+        schluessel = sharedPref.getString(KEY_SCHLUESSEL, null);
     }
 
     public void setDarkmode(int darkmode) {
@@ -63,5 +68,8 @@ public class Model {
     public int getLanguage() {
         return language;
     }
+
+    public void setSchluessel(String schluessel) {this.schluessel = schluessel;}
+    public String getSchluessel() {return schluessel;}
 
 }
