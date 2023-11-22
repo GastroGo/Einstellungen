@@ -1,10 +1,10 @@
 package com.example.gastrogo_einstellungen_v1;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,24 +42,48 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner_languages.setAdapter(adapter);
         spinner_languages.setOnItemSelectedListener(this);
 
+        mitarbeiterLogin.setEnabled(false);
+        schluesselEingabe.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mitarbeiterLogin.setEnabled(true);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().isEmpty()) {
+                    mitarbeiterLogin.setEnabled(false);
+                }
+            }
+        });
+
         Model model = Model.getInstance();
-        if(model.getBenachrichtigungen() == 1) {
+        model.load(this);
+        if (model.getBenachrichtigungen() == 1) {
             benachrichtigungen.setChecked(true);
         } else {
             benachrichtigungen.setChecked(false);
         }
 
-        if(model.getDarkmode() == 1) {
+        if (model.getDarkmode() == 1) {
             darkmode.setChecked(true);
         } else {
             darkmode.setChecked(false);
         }
 
-        if(model.getLanguage() == 1) {
+        if (model.getLanguage() == 1) {
             spinner_languages.setSelection(1);
         } else {
             spinner_languages.setSelection(0);
         }
+
+        schluesselEingabe.setText(model.getSchluessel());
 
         mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,14 +92,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 Model model = Model.getInstance();
                 model.setSchluessel(schluesseleingabe);
                 model.save(view.getContext());
-
-                if (schluesseleingabe.equals("1234")) {
-                    Toast.makeText(MainActivity.this, "Login erfolgreich", Toast.LENGTH_LONG).show();
-                    mitarbeiterLogin.setEnabled(true); // Aktiviert den Button, wenn das Passwort korrekt ist
-                } else {
-                    Toast.makeText(MainActivity.this, "Login fehlgeschlagen", Toast.LENGTH_LONG).show();
-                    mitarbeiterLogin.setEnabled(false); // Deaktiviert den Button bei falschem Passwort
-                }
             }
         });
 
@@ -101,8 +116,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
 
-
-
         benachrichtigungen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Model model = Model.getInstance();
@@ -114,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 model.save(buttonView.getContext());
             }
         });
-
 
 
     }

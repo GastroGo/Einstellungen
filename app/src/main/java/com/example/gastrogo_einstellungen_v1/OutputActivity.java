@@ -28,6 +28,7 @@ public class OutputActivity extends AppCompatActivity {
         benachrichtigungenOut = findViewById(R.id.benachrichtigungenOut);
         languageOut = findViewById(R.id.languageOut);
         Model model = Model.getInstance();
+        model.load(this);
         int darkmode = model.getDarkmode();
         int benachrichtigungen = model.getBenachrichtigungen();
         int language = model.getLanguage();

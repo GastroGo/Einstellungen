@@ -39,10 +39,10 @@ public class Model {
 
     public void load(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        darkmode = sharedPref.getInt(String.valueOf(KEY_DARKMODE), 0);
-        benachrichtigungen = sharedPref.getInt(String.valueOf(KEY_BENACHRICHTIGUNGEN), 0);
-        language = sharedPref.getInt(String.valueOf(KEY_LANGUAGE), 0);
-        schluessel = sharedPref.getString(KEY_SCHLUESSEL, null);
+        darkmode = sharedPref.getInt("KEY_DARKMODE", KEY_DARKMODE);
+        benachrichtigungen = sharedPref.getInt("KEY_BENACHRICHTIGUNGEN", KEY_BENACHRICHTIGUNGEN);
+        language = sharedPref.getInt("KEY_LANGUAGE", KEY_LANGUAGE);
+        schluessel = sharedPref.getString("KEY_SCHLUESSEL", KEY_SCHLUESSEL);
     }
 
     public void setDarkmode(int darkmode) {
@@ -69,7 +69,12 @@ public class Model {
         return language;
     }
 
-    public void setSchluessel(String schluessel) {this.schluessel = schluessel;}
-    public String getSchluessel() {return schluessel;}
+    public void setSchluessel(String schluessel) {
+        this.schluessel = schluessel;
+    }
+
+    public String getSchluessel() {
+        return schluessel;
+    }
 
 }
