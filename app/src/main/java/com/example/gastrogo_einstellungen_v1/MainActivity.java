@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner_languages.setOnItemSelectedListener(this);
 
         mitarbeiterLogin.setEnabled(false);
-        schluesselEingabe.addTextChangedListener(new TextWatcher() {
 
+        schluesselEingabe.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 mitarbeiterLogin.setEnabled(true);
