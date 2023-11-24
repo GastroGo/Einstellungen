@@ -59,7 +59,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void afterTextChanged(Editable editable) {
                 if (editable.toString().isEmpty()) {
                     mitarbeiterLogin.setEnabled(false);
-                }
+                    String schluesseleingabe = schluesselEingabe.getText().toString();
+                    Model model = Model.getInstance();
+                    model.setSchluessel(schluesseleingabe);
+                    model.save(view.getContext());
+                } 
             }
         });
 
