@@ -1,6 +1,5 @@
 package com.example.gastrogo_einstellungen_v1;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -16,130 +14,90 @@ import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
-    @SuppressLint("MissingInflatedId")
+    private EditText schluesselEingabe;
+    private Switch benachrichtigungen, darkmode;
+    private Spinner spinner_languages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        EditText schluesselEingabe;
-        Switch benachrichtigungen;
-        Switch darkmode;
-        Button mitarbeiterLogin;
-        Button zurueck;
-
-        Spinner spinner_languages = findViewById(R.id.spinner_languages);
+        schluesselEingabe = findViewById(R.id.schluesselEingabe);
         benachrichtigungen = findViewById(R.id.benachrichtigungen);
         darkmode = findViewById(R.id.darkmode);
-        schluesselEingabe = findViewById(R.id.schluesselEingabe);
-        mitarbeiterLogin = findViewById(R.id.mitarbeiterLogin);
-        zurueck = findViewById(R.id.zurueck);
+        spinner_languages = findViewById(R.id.spinner_languages);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner_languages.setAdapter(adapter);
-        spinner_languages.setOnItemSelectedListener(this);
 
-        mitarbeiterLogin.setEnabled(false);
+        setupListeners();
+        loadModelData();
+    }
+
+    private void setupListeners() {
         schluesselEingabe.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mitarbeiterLogin.setEnabled(true);
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().isEmpty()) {
-                    mitarbeiterLogin.setEnabled(false);
-                }
+                findViewById(R.id.mitarbeiterLogin).setEnabled(!editable.toString().isEmpty());
             }
         });
 
+        findViewById(R.id.mitarbeiterLogin).setOnClickListener(view -> saveSchluessel());
+        findViewById(R.id.zurueck).setOnClickListener(view -> startActivity(new Intent(view.getContext(), OutputActivity.class)));
+
+        darkmode.setOnCheckedChangeListener(this::onDarkModeChanged);
+        benachrichtigungen.setOnCheckedChangeListener(this::onBenachrichtigungenChanged);
+        spinner_languages.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                saveLanguage(adapterView.getSelectedItemPosition());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void loadModelData() {
         Model model = Model.getInstance();
         model.load(this);
-        if (model.getBenachrichtigungen() == 1) {
-            benachrichtigungen.setChecked(true);
-        } else {
-            benachrichtigungen.setChecked(false);
-        }
 
-        if (model.getDarkmode() == 1) {
-            darkmode.setChecked(true);
-        } else {
-            darkmode.setChecked(false);
-        }
-
-        if (model.getLanguage() == 1) {
-            spinner_languages.setSelection(1);
-        } else {
-            spinner_languages.setSelection(0);
-        }
-
+        benachrichtigungen.setChecked(model.getBenachrichtigungen() == 1);
+        darkmode.setChecked(model.getDarkmode() == 1);
+        spinner_languages.setSelection(model.getLanguage());
         schluesselEingabe.setText(model.getSchluessel());
-
-        mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String schluesseleingabe = schluesselEingabe.getText().toString();
-                Model model = Model.getInstance();
-                model.setSchluessel(schluesseleingabe);
-                model.save(view.getContext());
-            }
-        });
-
-        zurueck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), OutputActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        darkmode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Model model = Model.getInstance();
-                if (isChecked) {
-                    model.setDarkmode(1);
-                } else {
-                    model.setDarkmode(0);
-                }
-                model.save(buttonView.getContext());
-            }
-        });
-
-
-        benachrichtigungen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Model model = Model.getInstance();
-                if (isChecked) {
-                    model.setBenachrichtigungen(1);
-                } else {
-                    model.setBenachrichtigungen(0);
-                }
-                model.save(buttonView.getContext());
-            }
-        });
-
-
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    private void saveSchluessel() {
         Model model = Model.getInstance();
-        model.setLanguage(adapterView.getSelectedItemPosition());
-        model.save(view.getContext());
+        model.setSchluessel(schluesselEingabe.getText().toString());
+        model.save(this);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    private void onDarkModeChanged(CompoundButton buttonView, boolean isChecked) {
+        Model model = Model.getInstance();
+        model.setDarkmode(isChecked ? 1 : 0);
+        model.save(this);
+    }
 
+    private void onBenachrichtigungenChanged(CompoundButton buttonView, boolean isChecked) {
+        Model model = Model.getInstance();
+        model.setBenachrichtigungen(isChecked ? 1 : 0);
+        model.save(this);
+    }
+
+    private void saveLanguage(int language) {
+        Model model = Model.getInstance();
+        model.setLanguage(language);
+        model.save(this);
     }
 }
