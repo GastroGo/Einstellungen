@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 findViewById(R.id.mitarbeiterLogin).setEnabled(!editable.toString().isEmpty());
+                saveSchluessel();
             }
         });
 
