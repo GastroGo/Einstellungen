@@ -14,6 +14,9 @@ import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText schluesselEingabe;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner_languages.setAdapter(adapter);
+
+        DatabaseReference dbRestaurant = FirebaseDatabase.getInstance().getReference("Restaurants");
 
         setupListeners();
         loadModelData();
@@ -78,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
         schluesselEingabe.setText(model.getSchluessel());
     }
 
-    private void saveSchluessel() {
-        Model model = Model.getInstance();
-        model.setSchluessel(schluesselEingabe.getText().toString());
-        model.save(this);
-    }
+    
+
+
+
 
     private void onDarkModeChanged(CompoundButton buttonView, boolean isChecked) {
         Model model = Model.getInstance();
