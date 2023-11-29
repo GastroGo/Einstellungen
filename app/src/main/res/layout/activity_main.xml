@@ -53,7 +53,8 @@
         android:layout_marginBottom="323dp"
         android:ems="10"
         android:hint="Mitarbeiterschlüssel eingeben"
-        android:inputType="text" />
+        android:inputType="text"
+        android:text="-NkF_dqyroONEdMqgfgC" />
 
     <Button
         android:id="@+id/mitarbeiterLogin"

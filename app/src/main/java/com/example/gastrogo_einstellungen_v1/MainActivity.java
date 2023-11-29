@@ -11,14 +11,19 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    DatabaseReference dbRestaurant = FirebaseDatabase.getInstance().getReference("Restaurants");
     private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
     private Spinner spinner_languages;
@@ -36,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         spinner_languages.setAdapter(adapter);
 
-        DatabaseReference dbRestaurant = FirebaseDatabase.getInstance().getReference("Restaurants");
-
         setupListeners();
         loadModelData();
     }
@@ -45,10 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private void setupListeners() {
         schluesselEingabe.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -69,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -80,13 +86,35 @@ public class MainActivity extends AppCompatActivity {
         benachrichtigungen.setChecked(model.getBenachrichtigungen() == 1);
         darkmode.setChecked(model.getDarkmode() == 1);
         spinner_languages.setSelection(model.getLanguage());
-        schluesselEingabe.setText(model.getSchluessel());
+        // schluesselEingabe.setText(model.getSchluessel());
     }
 
-    
+    private void saveSchluessel() {
+        String schluessel = schluesselEingabe.getText().toString();
+        checkSchluessel(schluessel);
+    }
 
+    private void checkSchluessel(String schluessel) {
+        dbRestaurant.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Restaurant restaurant = snapshot.getValue(Restaurant.class);
+                    if (restaurant != null && restaurant.getId().equals(schluessel)) {
+                        Toast.makeText(MainActivity.this, "Login erfolgreich", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, Startseite.class);
+                        finish();
+                        break;
+                    }
+                }
+            }
 
-
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Fehlerbehandlung
+            }
+        });
+    }
 
     private void onDarkModeChanged(CompoundButton buttonView, boolean isChecked) {
         Model model = Model.getInstance();
