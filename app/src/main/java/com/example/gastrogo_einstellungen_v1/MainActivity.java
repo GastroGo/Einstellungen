@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,10 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseReference dbRestaurant = FirebaseDatabase.getInstance().getReference("Restaurants");
-    private EditText schluesselEingabe;
+    DatabaseReference dbRestaurant = FirebaseDatabase.getInstance("https://gastr0-default-rtdb.europe-west1.firebasedatabase.app").getReference("Restaurants");    private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
     private Spinner spinner_languages;
+    private Button mitarbeiterLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         benachrichtigungen = findViewById(R.id.benachrichtigungen);
         darkmode = findViewById(R.id.darkmode);
         spinner_languages = findViewById(R.id.spinner_languages);
+        mitarbeiterLogin = findViewById(R.id.mitarbeiterLogin);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -57,12 +59,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                findViewById(R.id.mitarbeiterLogin).setEnabled(!editable.toString().isEmpty());
+                mitarbeiterLogin.setEnabled(!editable.toString().isEmpty());
                 saveSchluessel();
             }
         });
 
-        findViewById(R.id.mitarbeiterLogin).setOnClickListener(view -> saveSchluessel());
+        mitarbeiterLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveSchluessel();
+            }
+        });
         findViewById(R.id.zurueck).setOnClickListener(view -> startActivity(new Intent(view.getContext(), OutputActivity.class)));
 
         darkmode.setOnCheckedChangeListener(this::onDarkModeChanged);
@@ -110,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Fehlerbehandlung
+            public void onCancelled(DatabaseError databaseError) { //:(
+                Toast.makeText(MainActivity.this, "Problem", Toast.LENGTH_SHORT).show();
             }
         });
     }
