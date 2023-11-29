@@ -24,7 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseReference dbRestaurant = FirebaseDatabase.getInstance("https://gastr0-default-rtdb.europe-west1.firebasedatabase.app").getReference("Restaurants");    private EditText schluesselEingabe;
+    DatabaseReference dbRestaurant = FirebaseDatabase.getInstance("https://gastr0-default-rtdb.europe-west1.firebasedatabase.app").getReference("Restaurants");
+    private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
     private Spinner spinner_languages;
     private Button mitarbeiterLogin;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     if (restaurant != null && restaurant.getId().equals(schluessel)) {
                         Toast.makeText(MainActivity.this, "Login erfolgreich", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, Startseite.class);
+                        startActivity(intent);  //wusste ich
                         finish();
                         break;
                     }
@@ -117,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) { //:(
+            public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(MainActivity.this, "Problem", Toast.LENGTH_SHORT).show();
             }
         });
