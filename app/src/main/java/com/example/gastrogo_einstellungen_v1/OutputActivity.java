@@ -40,7 +40,7 @@ public class OutputActivity extends AppCompatActivity {
         Einstellungen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                Intent intent = new Intent(view.getContext(), com.example.gastrogo_einstellungen_v1.Einstellungen.class);
                 startActivity(intent);
             }
         });

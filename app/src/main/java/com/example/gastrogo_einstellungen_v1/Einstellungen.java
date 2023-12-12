@@ -14,7 +14,7 @@ import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class Einstellungen extends AppCompatActivity {
 
     private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
