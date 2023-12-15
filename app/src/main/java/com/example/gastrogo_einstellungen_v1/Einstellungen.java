@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,8 +26,6 @@ public class Einstellungen extends AppCompatActivity {
     private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
     private Spinner spinner_languages;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference schluessel = database.getReference("Restaurants").child("-NkF_dqyroONEdMqgfgC").child("schluessel");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,11 +95,41 @@ public class Einstellungen extends AppCompatActivity {
     }
 
     private void schluesselAbgleichen() {
-        if (schluesselEingabe.getText().toString().equals(String value = schluessel.getValue(String.class))) {
-            Toast.makeText(this, "Schlüssel korrekt", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Schlüssel falsch", Toast.LENGTH_SHORT).show();
-        }
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference schluesselRef = ref.child("Schluessel");
+
+        schluesselRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String inputKey = schluesselEingabe.getText().toString();
+                boolean keyFound = false;
+
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot grandChildSnapshot : childSnapshot.getChildren()) {
+                        String firebaseKey = grandChildSnapshot.getValue(String.class);
+
+                        if (inputKey.equals(firebaseKey)) {
+                            Toast.makeText(Einstellungen.this, "Schlüssel korrekt", Toast.LENGTH_SHORT).show();
+                            keyFound = true;
+                            break;
+                        }
+                    }
+
+                    if (keyFound) {
+                        break;
+                    }
+                }
+
+                if (!keyFound) {
+                    Toast.makeText(Einstellungen.this, "Schlüssel falsch", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors.
+            }
+        });
     }
 
     private void onDarkModeChanged(CompoundButton buttonView, boolean isChecked) {
@@ -118,4 +149,5 @@ public class Einstellungen extends AppCompatActivity {
         model.setLanguage(language);
         model.save(this);
     }
+
 }
