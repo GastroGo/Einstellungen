@@ -11,14 +11,20 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Einstellungen extends AppCompatActivity {
 
     private EditText schluesselEingabe;
     private Switch benachrichtigungen, darkmode;
     private Spinner spinner_languages;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference schluessel = database.getReference("Restaurants").child("-NkF_dqyroONEdMqgfgC").child("schluessel");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,10 @@ public class Einstellungen extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.mitarbeiterLogin).setOnClickListener(view -> saveSchluessel());
+        findViewById(R.id.mitarbeiterLogin).setOnClickListener(view -> {
+            saveSchluessel();
+            schluesselAbgleichen();
+        });
         findViewById(R.id.zurueck).setOnClickListener(view -> startActivity(new Intent(view.getContext(), OutputActivity.class)));
 
         darkmode.setOnCheckedChangeListener(this::onDarkModeChanged);
@@ -82,6 +91,14 @@ public class Einstellungen extends AppCompatActivity {
         Model model = Model.getInstance();
         model.setSchluessel(schluesselEingabe.getText().toString());
         model.save(this);
+    }
+
+    private void schluesselAbgleichen() {
+        if (schluesselEingabe.getText().toString().equals(String value = schluessel.getValue(String.class))) {
+            Toast.makeText(this, "Schlüssel korrekt", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Schlüssel falsch", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void onDarkModeChanged(CompoundButton buttonView, boolean isChecked) {
